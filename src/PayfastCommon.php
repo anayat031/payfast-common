@@ -1,7 +1,5 @@
 <?php
 
-namespace PayfastCommon;
-
 /**
  * Copyright (c) 2023 PayFast (Pty) Ltd
  * You (being anyone who is not PayFast (Pty) Ltd) may download and use this plugin / code in your own website in
@@ -9,6 +7,8 @@ namespace PayfastCommon;
  * you may not use this plugin / code or part thereof. Except as expressly indicated in this licence, you may not use,
  * copy, modify or distribute this plugin / code or part thereof in any way.
  */
+
+namespace Payfast\PayfastCommon;
 
 // General Defines
 const PF_TIMEOUT = 15;
@@ -38,6 +38,11 @@ const PF_MSG_FAILED  = 'Payment has failed';
 const PF_MSG_PENDING = 'The payment is pending. Please note, you will receive another Instant' .
                        ' Transaction Notification when the payment status changes to' .
                        ' "Completed", or "Failed"';
+
+const PF_SOFTWARE_NAME = '';
+const PF_SOFTWARE_VER  = '';
+const PF_MODULE_NAME   = '';
+const PF_MODULE_VER    = '';
 
 class PayfastCommon
 {

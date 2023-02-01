@@ -14,8 +14,8 @@
     "php": "^8.0"
   },
   "autoload": {
-    "psr-12": {
-      "PayfastCommon": "src/"
+    "psr-4": {
+      "Payfast\\PayfastCommon\\": "src/"
     }
   }
 }
