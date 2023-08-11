@@ -1,4 +1,5 @@
 # payfast-common
+
 ## Payfast common class for modules
 
 This is the Payfast common class for modules.
