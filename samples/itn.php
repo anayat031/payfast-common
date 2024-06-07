@@ -11,25 +11,30 @@ $pfParamString = '';
 $pfHost        = "sandbox.payfast.co.za";
 $pfPassphrase  = "";
 
-define("PF_DEBUG", true);
-define("PF_SOFTWARE_NAME", "PayFast Software CO");
-define("PF_SOFTWARE_VER", 1.0);
-define("PF_MODULE_NAME", "PayFast Testing Module");
-define("PF_MODULE_VER", 1.0);
+// Debug mode
+$payfastCommon = new PayfastCommon(true);
 
-PayfastCommon::pflog('Payfast ITN call received');
+// Module parameters for pfValidData
+$moduleInfo = [
+    "pfSoftwareName"       => 'PayFast Software CO',
+    "pfSoftwareVer"        => '1.1.0)',
+    "pfSoftwareModuleName" => 'PayFast Testing Module',
+    "pfModuleVer"          => '1.1.0',
+];
+
+$payfastCommon->pflog('Payfast ITN call received');
 
 //// Notify PayFast that information has been received
 header('HTTP/1.0 200 OK');
 flush();
 
 //// Get data sent by PayFast
-PayfastCommon::pflog('Get posted data');
+$payfastCommon->pflog('Get posted data');
 
 // Posted variables from ITN
 $pfData = PayfastCommon::pfGetData();
 
-PayfastCommon::pflog('PayFast Data: ' . json_encode($pfData));
+$payfastCommon->pflog('PayFast Data: ' . json_encode($pfData));
 
 if ($pfData === false) {
     $pfError  = true;
@@ -43,12 +48,12 @@ if ($pfData === false) {
 
 // Verify security signature
 if (!$pfError) {
-    PayfastCommon::pflog('Verify security signature');
+    $payfastCommon->pflog('Verify security signature');
 
     $passphrase = null;
 
     // If signature different, log for debugging
-    if (!PayfastCommon::pfValidSignature($pfData, $pfParamString, $passphrase)) {
+    if (!$payfastCommon->pfValidSignature($pfData, $pfParamString, $passphrase)) {
         $pfError  = true;
         $pfErrMsg = PayfastCommon::PF_ERR_INVALID_SIGNATURE;
     }
@@ -56,9 +61,9 @@ if (!$pfError) {
 
 // Verify data received
 if (!$pfError) {
-    PayfastCommon::pflog('Verify data received');
+    $payfastCommon->pflog('Verify data received');
 
-    $pfValid = PayfastCommon::pfValidData($pfHost, $pfParamString);
+    $pfValid = $payfastCommon->pfValidData($pfHost, $pfParamString);
 
     if (!$pfValid) {
         $pfError  = true;
@@ -67,28 +72,28 @@ if (!$pfError) {
 }
 
 //// Check data against internal order & Check order amount
-if (!$pfError && (!PayfastCommon::pfAmountsEqual($pfData['amount_gross'], 10.00))) {
+if (!$pfError && (!$payfastCommon->pfAmountsEqual($pfData['amount_gross'], 10.00))) {
     $pfError  = true;
     $pfErrMsg = PayfastCommon::PF_ERR_AMOUNT_MISMATCH;
 }
 
 //// Check status and update order
 if (!$pfError) {
-    PayfastCommon::pflog('Check status and update order');
+    $payfastCommon->pflog('Check status and update order');
 
     $transaction_id = $pfData['pf_payment_id'];
 
     switch ($pfData['payment_status']) {
         case 'COMPLETE':
-            PayfastCommon::pflog('- Complete');
+            $payfastCommon->pflog('- Complete');
             break;
 
         case 'FAILED':
-            PayfastCommon::pflog('- Failed');
+            $payfastCommon->pflog('- Failed');
             break;
 
         case 'PENDING':
-            PayfastCommon::pflog('- Pending');
+            $payfastCommon->pflog('- Pending');
             break;
 
         default:
@@ -99,6 +104,6 @@ if (!$pfError) {
 
 //// Create order
 if (!$pfError && $pfData['payment_status'] == "COMPLETE") {
-    PayfastCommon::pflog("ORDER COMPLETE");
+    $payfastCommon->pflog("ORDER COMPLETE");
 }
 
