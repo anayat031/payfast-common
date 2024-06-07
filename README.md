@@ -29,7 +29,7 @@ $pfValid = $payfastCommon->pfValidData($moduleInfo, $pfHost, $pfParamString);
 
 ### Debug Mode
 
-Configure debug mode by passing true|false when instantiating the PayfastCommon call.
+Configure debug mode by passing true|false when instantiating the PayfastCommon class.
 
 ```
 $payfastCommon = new PayfastCommon(true);
