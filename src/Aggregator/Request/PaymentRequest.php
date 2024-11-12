@@ -8,9 +8,9 @@
  * copy, modify or distribute this plugin / code or part thereof in any way.
  */
 
-namespace Payfast\PayfastCommon;
+namespace Payfast\PayfastCommon\Aggregator\Request;
 
-class PayfastCommon
+class PaymentRequest
 {
     // General Defines
     public const PF_TIMEOUT = 15;

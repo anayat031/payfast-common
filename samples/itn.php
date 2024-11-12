@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '../../src/PayfastCommon.php';
+require_once __DIR__ . '../../src/Aggregator/Request/PaymentRequest.php';
 
-use Payfast\PayfastCommon\PayfastCommon;
+use Payfast\PayfastCommon\Aggregator\Request\PaymentRequest;
 
 $pfError       = false;
 $pfErrMsg      = '';
@@ -12,7 +12,7 @@ $pfHost        = "sandbox.payfast.co.za";
 $pfPassphrase  = "";
 
 // Debug mode
-$payfastCommon = new PayfastCommon(true);
+$payfastCommon = new PaymentRequest(true);
 
 // Module parameters for pfValidData
 $moduleInfo = [
@@ -32,13 +32,13 @@ flush();
 $payfastCommon->pflog('Get posted data');
 
 // Posted variables from ITN
-$pfData = PayfastCommon::pfGetData();
+$pfData = PaymentRequest::pfGetData();
 
 $payfastCommon->pflog('PayFast Data: ' . json_encode($pfData));
 
 if ($pfData === false) {
     $pfError  = true;
-    $pfErrMsg = PayfastCommon::PF_ERR_BAD_ACCESS;
+    $pfErrMsg = PaymentRequest::PF_ERR_BAD_ACCESS;
 }
 
 /**
@@ -55,7 +55,7 @@ if (!$pfError) {
     // If signature different, log for debugging
     if (!$payfastCommon->pfValidSignature($pfData, $pfParamString, $passphrase)) {
         $pfError  = true;
-        $pfErrMsg = PayfastCommon::PF_ERR_INVALID_SIGNATURE;
+        $pfErrMsg = PaymentRequest::PF_ERR_INVALID_SIGNATURE;
     }
 }
 
@@ -67,14 +67,14 @@ if (!$pfError) {
 
     if (!$pfValid) {
         $pfError  = true;
-        $pfErrMsg = PayfastCommon::PF_ERR_BAD_ACCESS;
+        $pfErrMsg = PaymentRequest::PF_ERR_BAD_ACCESS;
     }
 }
 
 //// Check data against internal order & Check order amount
 if (!$pfError && (!$payfastCommon->pfAmountsEqual($pfData['amount_gross'], 10.00))) {
     $pfError  = true;
-    $pfErrMsg = PayfastCommon::PF_ERR_AMOUNT_MISMATCH;
+    $pfErrMsg = PaymentRequest::PF_ERR_AMOUNT_MISMATCH;
 }
 
 //// Check status and update order
