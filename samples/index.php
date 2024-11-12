@@ -1,8 +1,8 @@
 <?php
 
-require_once __DIR__ . '../../src/PayfastCommon.php';
+require_once __DIR__ . '../../src/Aggregator/Request/PaymentRequest.php';
 
-use Payfast\PayfastCommon\PayfastCommon;
+use Payfast\PayfastCommon\Aggregator\Request\PaymentRequest;
 
 $year = date('Y');
 const HTTP_LITERAL = "https://";
@@ -43,7 +43,7 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
                 'amount'       => 10.00,
                 'item_name'    => 'test item',
             );
-            PayfastCommon::createTransaction($salePayArray, $passphrase, true);
+            PaymentRequest::createTransaction($salePayArray, $passphrase, true);
             break;
         case "Subscription Transaction":
             $subscriptionPayArray = array(
@@ -58,10 +58,10 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
                 'frequency'         => 3,
                 'cycles'            => 0,
             );
-            PayfastCommon::createTransaction($subscriptionPayArray, $passphrase, true);
+            PaymentRequest::createTransaction($subscriptionPayArray, $passphrase, true);
             break;
         case "Ping PayFast":
-            echo filter_var(PayfastCommon::pingPayfast($merchantID, $passphrase), FILTER_SANITIZE_STRING);
+            echo filter_var(PaymentRequest::pingPayfast($merchantID, $passphrase), FILTER_SANITIZE_STRING);
             break;
         case "Refund Query":
             $refundAction = "query";
@@ -114,7 +114,7 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
     }
     if ($subscriptionAction !== null) {
         echo filter_var(
-            PayfastCommon::subscriptionAction(
+            PaymentRequest::subscriptionAction(
                 $merchantID,
                 $subscriptionToken,
                 $subscriptionAction,
@@ -126,7 +126,7 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
         );
     } elseif ($refundAction !== null) {
         echo filter_var(
-            PayfastCommon::refundAction(
+            PaymentRequest::refundAction(
                 $merchantID,
                 $passphrase,
                 $examplePfPaymentId,
