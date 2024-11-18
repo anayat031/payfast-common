@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.2.1](https://github.com/Payfast/payfast-common/releases/tag/v1.2.1)
+
+### Changed
+
+- Refactored common API methods to use instance-based (non-static) implementations for improved
+  flexibility and testability.
+
+### Fixed
+
+- Corrected the URL used in the Refund method to ensure accurate API requests.
+
 ## [1.2.0](https://github.com/Payfast/payfast-common/releases/tag/v1.2.0)
 
 ### Added

@@ -29,8 +29,9 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
     $subscriptionAction = null;
     $subscriptionData   = [];
 
-    $refundAction = null;
-    $refundData   = [];
+    $refundAction   = null;
+    $refundData     = [];
+    $paymentRequest = new PaymentRequest(true);
 
     switch ($selectedTest) {
         case "Sale Transaction":
@@ -61,7 +62,7 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
             PaymentRequest::createTransaction($subscriptionPayArray, $passphrase, true);
             break;
         case "Ping PayFast":
-            echo filter_var(PaymentRequest::pingPayfast($merchantID, $passphrase), FILTER_SANITIZE_STRING);
+            echo filter_var($paymentRequest->pingPayfast($merchantID, $passphrase), FILTER_SANITIZE_STRING);
             break;
         case "Refund Query":
             $refundAction = "query";
@@ -114,7 +115,7 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
     }
     if ($subscriptionAction !== null) {
         echo filter_var(
-            PaymentRequest::subscriptionAction(
+            $paymentRequest->subscriptionAction(
                 $merchantID,
                 $subscriptionToken,
                 $subscriptionAction,
@@ -126,7 +127,7 @@ if (array_key_exists('payfastMagicButton', $_POST)) {
         );
     } elseif ($refundAction !== null) {
         echo filter_var(
-            PaymentRequest::refundAction(
+            $paymentRequest->refundAction(
                 $merchantID,
                 $passphrase,
                 $examplePfPaymentId,
